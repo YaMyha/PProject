@@ -84,5 +84,7 @@ class TransactionService:
                 await session.commit()
                 logger.info('Transaction successfully committed to the database.')
         except Exception as e:
+            await session.rollback()
+
             logger.exception('An error occurred while inserting the transaction.')
             raise DatabaseError("Transaction insertion failed.")
