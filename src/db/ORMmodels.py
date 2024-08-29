@@ -1,14 +1,12 @@
 from typing import Optional, Annotated
-
-from sqlalchemy import String, Integer, Numeric, ForeignKey, Boolean, Text, DateTime, func, MetaData
+from sqlalchemy import String, Integer, Numeric, ForeignKey, Boolean, MetaData
 from sqlalchemy.orm import declarative_base, mapped_column, Mapped, relationship
-from sqlalchemy.dialects.postgresql import UUID
-import uuid
 
 Base = declarative_base()
+metadata = MetaData()
 
 intpk = Annotated[int, mapped_column(primary_key=True)]
-metadata = MetaData()
+
 
 class Customer(Base):
     __tablename__ = "customer"
@@ -56,6 +54,7 @@ class BillingAddress(Base):
         "Customer", back_populates="billing_address"
     )
 
+
 class PaymentDetail(Base):
     __tablename__ = "payment_detail"
     metadata = metadata
@@ -73,6 +72,7 @@ class PaymentDetail(Base):
     transaction: Mapped["Transaction"] = relationship(
         "Transaction", back_populates="payment_detail"
     )
+
 
 class Transaction(Base):
     __tablename__ = "transaction"

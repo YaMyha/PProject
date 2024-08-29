@@ -1,7 +1,5 @@
-from datetime import datetime, date
 from typing import Optional
-
-from pydantic import BaseModel, EmailStr, constr, conint
+from pydantic import BaseModel, EmailStr, constr
 
 
 class BillingAddress(BaseModel):

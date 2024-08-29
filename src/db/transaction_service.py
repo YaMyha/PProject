@@ -4,8 +4,16 @@ from db.database import async_session_factory
 
 class TransactionService:
 
+    # TODO: Add checks for customer/merchant existence in db
     @staticmethod
     async def insert_transaction(request):
+        """
+        Inserts a new transaction into the database, along with creating related records
+        for the customer, merchant, billing address, and payment details.
+
+        Arguments:
+        request (RequestModel): An object containing transaction data and related information.
+        """
         async with async_session_factory() as session:
             customer = Customer(
                 customer_id=request.merchant.customerID,
@@ -37,10 +45,13 @@ class TransactionService:
                 save_details=request.transaction.paymentDetail.saveDetails == "true",
                 cvv=request.transaction.paymentDetail.cvv
             )
+
+            # Add the created objects to the session
             session.add(customer)
             session.add(merchant)
             session.add(billing_address)
             session.add(payment_detail)
+            # Perform a flush to the database to get the payment detail id
             await session.flush()
 
             transaction = Transaction(
