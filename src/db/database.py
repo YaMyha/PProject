@@ -2,9 +2,10 @@ from typing import AsyncGenerator
 
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker
+from configs.config import settings
 
 async_engine = create_async_engine(
-    url="postgresql+asyncpg://postgres:YuWlNvrGs@localhost:5432/testtask",
+    url=settings.DATABASE_URL_asyncpg,
     echo=True,
 )
 

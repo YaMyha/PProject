@@ -1,7 +1,8 @@
 import logging
 from fastapi import APIRouter, HTTPException
 
-from db.container import transaction_service, redis_client
+from configs.config import logger
+from container import transaction_service, redis_client
 from validation import RequestModel
 
 router = APIRouter(
@@ -11,13 +12,19 @@ router = APIRouter(
 
 @router.post("/")
 async def process_transaction(request: RequestModel):
+    logger.info('Transaction came on the endpoint.')
     try:
         # Caching
         request_json = request.model_dump_json()
-        redis_client.rpush('REQUESTS', request_json)
+        logger.debug('Dumped request to json.')
 
+        redis_client.rpush('REQUESTS', request_json)
+        logger.debug('Pushed request to redis queue.')
+
+        logger.debug('Starting working with database.')
         # Storing in DB
         await transaction_service.insert_transaction(request)
+        logger.debug('Finished working with database.')
 
         response_data = {
             "description": "Transaction has been processed successfully",
@@ -25,6 +32,7 @@ async def process_transaction(request: RequestModel):
             "txnReference": request.transaction.txnReference
         }
 
+        logger.info('Transaction processing is successful. Returning response...')
         return response_data
     except Exception as ex:
         logging.error(ex)

@@ -9,6 +9,7 @@ from sqlalchemy.ext.asyncio import async_engine_from_config
 
 from alembic import context
 
+from configs.config import settings
 from src.db.ORMmodels import metadata
 
 sys.path.append(os.path.join(sys.path[0], 'src'))
@@ -18,7 +19,7 @@ sys.path.append(os.path.join(sys.path[0], 'src'))
 config = context.config
 
 section = config.config_ini_section
-config.set_section_option(section, "DB_URL", "postgresql+asyncpg://postgres:YuWlNvrGs@localhost:5432/testtask")
+config.set_section_option(section, "DB_URL", settings.DATABASE_URL_asyncpg)
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.
 if config.config_file_name is not None:
