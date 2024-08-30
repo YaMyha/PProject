@@ -15,10 +15,7 @@ class AppSettings(BaseSettings):
     DB_NAME: str
 
     model_config = SettingsConfigDict(env_file=DOTENV, env_file_encoding="utf-8")
-    logging.basicConfig(
-        level=logging.INFO,
-        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-    )
+
 
     @property
     def DATABASE_URL_asyncpg(self):
@@ -26,4 +23,10 @@ class AppSettings(BaseSettings):
 
 
 settings = AppSettings()
+
+logging.basicConfig(
+        filename='app.log',
+        level=logging.INFO,
+        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    )
 logger = logging.getLogger(__name__)
